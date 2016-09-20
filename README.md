@@ -13,4 +13,18 @@ make
 make install
 ```
 
-This is just a skeleton right now
+Split
+-----
+
+Split a BAM file by the BX tag.
+
+```
+## split a BAM into individual BAMs test.<bx>.bam. Don't output tags with < 10 reads
+bxtools split -b $bam -a test -m 10 > counts.tsv
+
+## split a portion of a BAM 
+samtools view -h $bam 1:1,000,000-2,000,000 | bxtools split -b - -a test > counts.tsv
+
+## just get the BX counts and sort by prevalence
+bxtools split -b $bam - -x | sort -n -k 2,2 > counts.tsv
+```
