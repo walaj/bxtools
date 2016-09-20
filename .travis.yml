@@ -1,0 +1,29 @@
+language: cpp
+
+compiler: 
+- gcc
+
+env: 
+  global: 
+  - secure: ck5M5R8YqNGA5LFmE5NdkkNvYMqwKg4v/b9/VE+Zhdw87Vx4xE44aHh/TxtQYDvrhzrmLWjmnCRR0g7TfXWCZ/Nq3gWqVqUe4j/ltG+zzI/3LWViZN6i91G/12LAgE/LZpyDnJOssbGYB5jDtYS4SgFmgTpYkFHfAuZWKOblMl7eP5DBCBTAe7GynDmCnSo3BDaYnQ1k1d7q9u/LxeMx2SOvbZF5tkanVvSthYAMiKgnyOwQSSWnitvrBrx4KwoyW6D8TT1W0PSl2ZggHYHreM22/F3MWGJeDNcdz5uA3EhpMP1ZYnAaSN4pgRv5D1/fuilmgn1IjBeoDTInQf6p0ri1L4Z3NmY+Plr75Q7/pOhjfWFw033AYh7Sio83lTR1mWL/u9ri39btjrn2tfRuBFzPlIVrYwRBHIxUMqYqt89epe+w8/0kdBzFCnwsSPjQEc2cyBwrmXvKZZJImnmAOPb4IwtSmPdNNC6smkWUKV+kiktuiCX8NnNU82cuESVBblwTfcpqfnUAxY1+adDEPTP/r1HfbPOU4tr790FpUqOhFNwIruzyGYFVX/jMHtYFwlz9fTGrLp+2fSRuFRFU+kHYJcL3BRM13kEQFoqkdyO5X6Xpqn+PlnaEABttIT++Hm57QyeapBiVrrCjWENhY3ZKJs6U+7daKy11boUd2go=
+
+before_install: 
+- git submodule update --init --recursive
+- sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+- sudo apt-get update
+- sudo apt-get install python-yaml libyaml-dev build-essential libssh2-1-dev libarchive-dev
+- sudo apt-get install gcc-4.9 g++-4.9
+- sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 20
+- sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 20
+- sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-4.9 20
+- sudo update-alternatives --config gcc
+- sudo update-alternatives --config g++
+- if [ "${CXX}" = "g++" ]; then export CXX="$(which g++-4.9)"; export CC="$(which gcc-4.9)"; fi
+- if [ "${TRAVIS_OS_NAME}" = "osx" -a "${CXX}" = "clang++" ]; then export CXX="$(which c++)"; export CC="$(which cc)"; fi
+
+script: 
+- ./configure && make
+
+branches: 
+  only: 
+  - master

@@ -1,29 +1,36 @@
-# Compiled Object files
-*.slo
-*.lo
+SVSim*
+[#]*[#]
+.\#*
+*~
+*.csv
 *.o
-*.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
+*.gif
+*.gcda
+*.gcno
+*.gcov
+.*
+Test
+autom4te.cache
+.Rhistory
+.in
+.deps*
+html
+latex
+config.log
+tmp*
+libhts.*
+libsnowtools.a
+libaho*
+libbwa.a
+example*
+tabix
+htsfile
+bgzip
+back*
+*.m4
+*.bam
+bxtools
+stamp-h1
+config.status
+Makefile
+*.pico
