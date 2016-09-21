@@ -28,3 +28,13 @@ samtools view -h $bam 1:1,000,000-2,000,000 | bxtools split -b - -a test > count
 ## just get the BX counts and sort by prevalence
 bxtools split -b $bam - -x | sort -n -k 2,2 > counts.tsv
 ```
+
+Stats
+-----
+
+Collect BX-level statistics from a 10X BAM
+
+```
+bxtools stats $bam > stats.tsv
+## output is BX  count  median_isize  median_mapq
+```

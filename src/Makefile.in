@@ -46,7 +46,7 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_bxtools_OBJECTS = bxtools-bxtools.$(OBJEXT) \
-	bxtools-bxsplit.$(OBJEXT)
+	bxtools-bxsplit.$(OBJEXT) bxtools-bxstats.$(OBJEXT)
 bxtools_OBJECTS = $(am_bxtools_OBJECTS)
 bxtools_DEPENDENCIES = $(top_builddir)/SeqLib/src/libseqlib.a \
 	$(top_builddir)/SeqLib/htslib/libhts.a
@@ -164,7 +164,7 @@ bxtools_LDADD = \
 	$(top_builddir)/SeqLib/src/libseqlib.a \
 	$(top_builddir)/SeqLib/htslib/libhts.a 
 
-bxtools_SOURCES = bxtools.cpp bxsplit.cpp
+bxtools_SOURCES = bxtools.cpp bxsplit.cpp bxstats.cpp
 all: all-am
 
 .SUFFIXES:
@@ -247,6 +247,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bxtools-bxsplit.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bxtools-bxstats.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bxtools-bxtools.Po@am__quote@
 
 .cpp.o:
@@ -290,6 +291,20 @@ bxtools-bxsplit.obj: bxsplit.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='bxsplit.cpp' object='bxtools-bxsplit.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bxtools_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o bxtools-bxsplit.obj `if test -f 'bxsplit.cpp'; then $(CYGPATH_W) 'bxsplit.cpp'; else $(CYGPATH_W) '$(srcdir)/bxsplit.cpp'; fi`
+
+bxtools-bxstats.o: bxstats.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bxtools_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT bxtools-bxstats.o -MD -MP -MF $(DEPDIR)/bxtools-bxstats.Tpo -c -o bxtools-bxstats.o `test -f 'bxstats.cpp' || echo '$(srcdir)/'`bxstats.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/bxtools-bxstats.Tpo $(DEPDIR)/bxtools-bxstats.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='bxstats.cpp' object='bxtools-bxstats.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bxtools_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o bxtools-bxstats.o `test -f 'bxstats.cpp' || echo '$(srcdir)/'`bxstats.cpp
+
+bxtools-bxstats.obj: bxstats.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bxtools_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT bxtools-bxstats.obj -MD -MP -MF $(DEPDIR)/bxtools-bxstats.Tpo -c -o bxtools-bxstats.obj `if test -f 'bxstats.cpp'; then $(CYGPATH_W) 'bxstats.cpp'; else $(CYGPATH_W) '$(srcdir)/bxstats.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/bxtools-bxstats.Tpo $(DEPDIR)/bxtools-bxstats.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='bxstats.cpp' object='bxtools-bxstats.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bxtools_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o bxtools-bxstats.obj `if test -f 'bxstats.cpp'; then $(CYGPATH_W) 'bxstats.cpp'; else $(CYGPATH_W) '$(srcdir)/bxstats.cpp'; fi`
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \

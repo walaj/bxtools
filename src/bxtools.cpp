@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <bxsplit.h>
+#include <bxstats.h>
 
 static const char *USAGE_MESSAGE =
 "Program: bxtools \n"
@@ -13,6 +14,7 @@ static const char *USAGE_MESSAGE =
 "Usage: snowman <command> [options]\n\n"
 "Commands:\n"
 "           split          Split a BAM into multiple BAMs, one per BX tag\n"
+"           stats          Collect BX-level statistics across a BAM\n"
 "\nReport bugs to jwala@broadinstitute.org \n\n";
 
 int main(int argc, char** argv) {
@@ -27,6 +29,8 @@ int main(int argc, char** argv) {
       return 0;
     } else if (command == "split") {
       runSplit(argc -1, argv + 1);
+    } else if (command == "stats") {
+      runStat(argc -1, argv + 1);
     }
     else {
       std::cerr << USAGE_MESSAGE;
