@@ -78,8 +78,8 @@ Example recipes
 ## make a list of bad tags (freq < 100)
 samtools view -h $bam 1:1-10,000,000 | bxtools split - -x | awk '$2 < 100' | cut -f1 > excluded_list.txt
 
-## get the coverage, while excluding bad tags (grep: -F literal, -f file)
-samtools view -h $bam 1:1-10,000,000 | grep -F -f excluded_list.txt | bxtools tile - -w 2000 > bxcov.bed
+## get the coverage, while excluding bad tags (grep: -F literal, -f file, -v exclude)
+samtools view -h $bam 1:1-10,000,000 | grep -v -F -f excluded_list.txt | bxtools tile - -w 2000 > bxcov.bed
 ```
 
 Attributions
