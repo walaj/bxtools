@@ -1,5 +1,7 @@
 #include "bxstats.h"
 
+#include "bxcommon.h"
+
 #include <getopt.h>
 #include <iostream>
 #include <sstream>
@@ -32,7 +34,7 @@ void runStat(int argc, char** argv) {
   
   parseStatOptions(argc, argv);
 
-  // opeen the BAM
+  // open the BAM
   SeqLib::BamReader reader;
   if (!reader.Open(opt::bam)) {
     std::cerr << "Failed to open bam: " << opt::bam << std::endl;

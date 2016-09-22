@@ -27,7 +27,6 @@ namespace opt {
 static const char* shortopts = "hvxb:a:m:";
 static const struct option longopts[] = {
   { "help",                    no_argument, NULL, 'h' },
-  { "bam",                     required_argument, NULL, 'b' },
   { "no-output",               no_argument, NULL, 'x' },
   { "analysis-id",             required_argument, NULL, 'a' },
   { "verbose",                 no_argument, NULL, 'v' },
@@ -36,13 +35,12 @@ static const struct option longopts[] = {
 };
 
 static const char *SPLIT_USAGE_MESSAGE =
-"Usage: bxtools split -b <BAM/SAM/CRAM> -a <id> > bxcounts.tsv\n"
+"Usage: bxtools split <BAM/SAM/CRAM> -a <id> > bxcounts.tsv\n"
 "Description: Split / count a BAM into multiple BAMs, one BAM per unique BX tag\n"
 "\n"
 "  General options\n"
 "  -v, --verbose                        Select verbosity level (0-4). Default: 0 \n"
 "  -h, --help                           Display this help and exit\n"
-"  -b, --bam                            BAM to split by BX tag. - for stdin\n"
 "  -a, --analysis-id                    ID to prefix output files with [foo]\n"
 "  -x, --no-output                      Don't output BAMs (count only) [off]\n"
 "  -m, --min-reads                      Minumum reads of given tag to see before writing [0]\n"
@@ -52,8 +50,10 @@ void parseSplitOptions(int argc, char** argv) {
 
   bool die = false;
 
-  if (argc <= 2) 
+  if (argc < 2) 
     die = true;
+
+  opt::bam = std::string(argv[1]);
 
   bool help = false;
   std::stringstream ss;
@@ -61,22 +61,16 @@ void parseSplitOptions(int argc, char** argv) {
   for (char c; (c = getopt_long(argc, argv, shortopts, longopts, NULL)) != -1;) {
     std::istringstream arg(optarg != NULL ? optarg : "");
     switch (c) {
-    case 'b': arg >> opt::bam; break;
     case 'a': arg >> opt::analysis_id; break;
     case 'v': opt::verbose = true; break;
     case 'x': opt::noop = true; break;
     case 'm': arg >> opt::min; break;
     }
+  }
 
-  if (die || help) 
-    {
-      std::cerr << "\n" << SPLIT_USAGE_MESSAGE;
-      if (die)
-	exit(EXIT_FAILURE);
-      else 
-	exit(EXIT_SUCCESS);	
-    }
-
+  if (die || help) {
+    std::cerr << "\n" << SPLIT_USAGE_MESSAGE;
+    die ? exit(EXIT_FAILURE) : exit(EXIT_SUCCESS);
   }
 }
 
@@ -147,7 +141,6 @@ void runSplit(int argc, char** argv) {
       std::cerr << "failed to write read " << r << " to BAM for " << bx << std::endl;
       exit(EXIT_FAILURE);
     }
-      
     
   }
 

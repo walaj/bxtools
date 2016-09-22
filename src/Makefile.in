@@ -46,7 +46,8 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_bxtools_OBJECTS = bxtools-bxtools.$(OBJEXT) \
-	bxtools-bxsplit.$(OBJEXT) bxtools-bxstats.$(OBJEXT)
+	bxtools-bxsplit.$(OBJEXT) bxtools-bxstats.$(OBJEXT) \
+	bxtools-bxtile.$(OBJEXT)
 bxtools_OBJECTS = $(am_bxtools_OBJECTS)
 bxtools_DEPENDENCIES = $(top_builddir)/SeqLib/src/libseqlib.a \
 	$(top_builddir)/SeqLib/htslib/libhts.a
@@ -164,7 +165,7 @@ bxtools_LDADD = \
 	$(top_builddir)/SeqLib/src/libseqlib.a \
 	$(top_builddir)/SeqLib/htslib/libhts.a 
 
-bxtools_SOURCES = bxtools.cpp bxsplit.cpp bxstats.cpp
+bxtools_SOURCES = bxtools.cpp bxsplit.cpp bxstats.cpp bxtile.cpp
 all: all-am
 
 .SUFFIXES:
@@ -248,6 +249,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bxtools-bxsplit.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bxtools-bxstats.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bxtools-bxtile.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bxtools-bxtools.Po@am__quote@
 
 .cpp.o:
@@ -305,6 +307,20 @@ bxtools-bxstats.obj: bxstats.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='bxstats.cpp' object='bxtools-bxstats.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bxtools_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o bxtools-bxstats.obj `if test -f 'bxstats.cpp'; then $(CYGPATH_W) 'bxstats.cpp'; else $(CYGPATH_W) '$(srcdir)/bxstats.cpp'; fi`
+
+bxtools-bxtile.o: bxtile.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bxtools_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT bxtools-bxtile.o -MD -MP -MF $(DEPDIR)/bxtools-bxtile.Tpo -c -o bxtools-bxtile.o `test -f 'bxtile.cpp' || echo '$(srcdir)/'`bxtile.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/bxtools-bxtile.Tpo $(DEPDIR)/bxtools-bxtile.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='bxtile.cpp' object='bxtools-bxtile.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bxtools_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o bxtools-bxtile.o `test -f 'bxtile.cpp' || echo '$(srcdir)/'`bxtile.cpp
+
+bxtools-bxtile.obj: bxtile.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bxtools_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT bxtools-bxtile.obj -MD -MP -MF $(DEPDIR)/bxtools-bxtile.Tpo -c -o bxtools-bxtile.obj `if test -f 'bxtile.cpp'; then $(CYGPATH_W) 'bxtile.cpp'; else $(CYGPATH_W) '$(srcdir)/bxtile.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/bxtools-bxtile.Tpo $(DEPDIR)/bxtools-bxtile.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='bxtile.cpp' object='bxtools-bxtile.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bxtools_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o bxtools-bxtile.obj `if test -f 'bxtile.cpp'; then $(CYGPATH_W) 'bxtile.cpp'; else $(CYGPATH_W) '$(srcdir)/bxtile.cpp'; fi`
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \

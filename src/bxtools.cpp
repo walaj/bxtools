@@ -7,6 +7,7 @@
 #include <iostream>
 #include <bxsplit.h>
 #include <bxstats.h>
+#include <bxtile.h>
 
 static const char *USAGE_MESSAGE =
 "Program: bxtools \n"
@@ -15,6 +16,7 @@ static const char *USAGE_MESSAGE =
 "Commands:\n"
 "           split          Split a BAM into multiple BAMs, one per BX tag\n"
 "           stats          Collect BX-level statistics across a BAM\n"
+"           tile           Collect BX-level coverage in tiles or regions along genome\n"
 "\nReport bugs to jwala@broadinstitute.org \n\n";
 
 int main(int argc, char** argv) {
@@ -31,6 +33,9 @@ int main(int argc, char** argv) {
       runSplit(argc -1, argv + 1);
     } else if (command == "stats") {
       runStat(argc -1, argv + 1);
+    }
+    else if (command == "tile") {
+      runTile(argc -1, argv + 1);
     }
     else {
       std::cerr << USAGE_MESSAGE;
