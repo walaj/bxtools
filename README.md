@@ -44,6 +44,7 @@ Tile
 
 Collect BX-level read counts on a tiled genome
 ```
+## default is 1kb tiles, across entire genome
 bxtools tile $bam > counts.bed
 
 ## input bed to check (e.g. chr1 only)
@@ -51,13 +52,13 @@ samtools view -h $bam 1:1-250,000,000 | bxtools tile - -b chr1.tiles.bed > chr1.
 ```
 
 ### Example recipes
-##### Get BX level coverage in 1kb bins across genome, ignore low-frequency tags
+##### Get BX level coverage in 2kb bins across genome, ignore low-frequency tags
 ```
 ## make a list of bad tags (freq < 100)
 samtools view -h $bam 1:1-10,000,000 | bxtools split - -x | awk '$2 < 100' | cut -f1 > excluded_list.txt
 
 ## get the coverage, while excluding bad tags (grep: -F literal, -f file)
-samtools view -h $bam 1:1-10,000,000 | grep -F -f excluded_list.txt | bxtools tile - -w 1000 > bxcov.bed
+samtools view -h $bam 1:1-10,000,000 | grep -F -f excluded_list.txt | bxtools tile - -w 2000 > bxcov.bed
 ```
 
 ```

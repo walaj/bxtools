@@ -13,7 +13,7 @@ namespace opt {
 
   static std::string bam; // the bam to analyze
   static bool verbose = false; 
-  static int width = 200;
+  static int width = 1000;
   static int overlap = 0;
   static std::string bed; // optional bed file
 }
@@ -34,8 +34,8 @@ static const char *TILE_USAGE_MESSAGE =
 "\n"
 "  General options\n"
 "  -v, --verbose         Set verbose output\n"
-"  -w, --width           Width of the tile\n"
-"  -O, --overlap         Overlap of the tiles\n"
+"  -w, --width           Width of the tile [1000]\n"
+"  -O, --overlap         Overlap of the tiles [0]\n"
 "  -b, --bed             Rather than tile genome, input BED with regions\n"
 "\n";
 
