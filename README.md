@@ -13,6 +13,7 @@ Table of contents
     * [Split](#split)
     * [Stats](#stats)
     * [Tile](#tile)
+    * [Relabel](#relabel)
   * [Example Recipes](#examples-recipes)
   * [Attributions](#attributions)
 
@@ -68,6 +69,13 @@ bxtools tile $bam > counts.bed
 
 ## input bed to check (e.g. chr1 only)
 samtools view -h $bam 1:1-250,000,000 | bxtools tile - -b chr1.tiles.bed > chr1.tiles.counts.bed
+```
+
+#### Relabel
+Move the BX barcodes from the ``BX`` tag (e.g. ``BX:ACTTACCGA``) to the read name (e.g. ``qname_ACTTACCGA``)
+```
+VERBOSE=-v ## print progress
+bxtools relabel $bam $VERBOSE > relabeled.bam
 ```
 
 Example recipes

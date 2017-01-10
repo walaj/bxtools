@@ -8,6 +8,7 @@
 #include <bxsplit.h>
 #include <bxstats.h>
 #include <bxtile.h>
+#include <bxrelabel.h>
 
 static const char *USAGE_MESSAGE =
 "Program: bxtools \n"
@@ -17,6 +18,7 @@ static const char *USAGE_MESSAGE =
 "           split          Split a BAM into multiple BAMs, one per BX tag\n"
 "           stats          Collect BX-level statistics across a BAM\n"
 "           tile           Collect BX-level coverage in tiles or regions along genome\n"
+"           relabel        Move BX barcodes from BX tags (e.g. BX:TAATACG) to qname_TAATACG\n"
 "\nReport bugs to jwala@broadinstitute.org \n\n";
 
 int main(int argc, char** argv) {
@@ -36,6 +38,9 @@ int main(int argc, char** argv) {
     }
     else if (command == "tile") {
       runTile(argc -1, argv + 1);
+    }
+    else if (command == "relabel") {
+      runRelabel(argc -1, argv + 1);
     }
     else {
       std::cerr << USAGE_MESSAGE;
