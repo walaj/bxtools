@@ -9,6 +9,7 @@
 #include <bxstats.h>
 #include <bxtile.h>
 #include <bxrelabel.h>
+#include <bxconvert.h>
 
 static const char *USAGE_MESSAGE =
 "Program: bxtools \n"
@@ -41,6 +42,9 @@ int main(int argc, char** argv) {
     }
     else if (command == "relabel") {
       runRelabel(argc -1, argv + 1);
+    }
+    else if (command == "convert"){
+      runConvert(argc -1, argv + 1);
     }
     else {
       std::cerr << USAGE_MESSAGE;

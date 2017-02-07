@@ -47,7 +47,8 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_bxtools_OBJECTS = bxtools-bxtools.$(OBJEXT) \
 	bxtools-bxsplit.$(OBJEXT) bxtools-bxstats.$(OBJEXT) \
-	bxtools-bxtile.$(OBJEXT) bxtools-bxrelabel.$(OBJEXT)
+	bxtools-bxtile.$(OBJEXT) bxtools-bxrelabel.$(OBJEXT) \
+	bxtools-bxconvert.$(OBJEXT)
 bxtools_OBJECTS = $(am_bxtools_OBJECTS)
 bxtools_DEPENDENCIES = $(top_builddir)/SeqLib/src/libseqlib.a \
 	$(top_builddir)/SeqLib/htslib/libhts.a
@@ -165,7 +166,7 @@ bxtools_LDADD = \
 	$(top_builddir)/SeqLib/src/libseqlib.a \
 	$(top_builddir)/SeqLib/htslib/libhts.a 
 
-bxtools_SOURCES = bxtools.cpp bxsplit.cpp bxstats.cpp bxtile.cpp bxrelabel.cpp
+bxtools_SOURCES = bxtools.cpp bxsplit.cpp bxstats.cpp bxtile.cpp bxrelabel.cpp bxconvert.cpp
 all: all-am
 
 .SUFFIXES:
@@ -247,6 +248,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bxtools-bxconvert.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bxtools-bxrelabel.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bxtools-bxsplit.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bxtools-bxstats.Po@am__quote@
@@ -336,6 +338,20 @@ bxtools-bxrelabel.obj: bxrelabel.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='bxrelabel.cpp' object='bxtools-bxrelabel.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bxtools_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o bxtools-bxrelabel.obj `if test -f 'bxrelabel.cpp'; then $(CYGPATH_W) 'bxrelabel.cpp'; else $(CYGPATH_W) '$(srcdir)/bxrelabel.cpp'; fi`
+
+bxtools-bxconvert.o: bxconvert.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bxtools_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT bxtools-bxconvert.o -MD -MP -MF $(DEPDIR)/bxtools-bxconvert.Tpo -c -o bxtools-bxconvert.o `test -f 'bxconvert.cpp' || echo '$(srcdir)/'`bxconvert.cpp
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/bxtools-bxconvert.Tpo $(DEPDIR)/bxtools-bxconvert.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='bxconvert.cpp' object='bxtools-bxconvert.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bxtools_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o bxtools-bxconvert.o `test -f 'bxconvert.cpp' || echo '$(srcdir)/'`bxconvert.cpp
+
+bxtools-bxconvert.obj: bxconvert.cpp
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bxtools_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT bxtools-bxconvert.obj -MD -MP -MF $(DEPDIR)/bxtools-bxconvert.Tpo -c -o bxtools-bxconvert.obj `if test -f 'bxconvert.cpp'; then $(CYGPATH_W) 'bxconvert.cpp'; else $(CYGPATH_W) '$(srcdir)/bxconvert.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/bxtools-bxconvert.Tpo $(DEPDIR)/bxtools-bxconvert.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='bxconvert.cpp' object='bxtools-bxconvert.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bxtools_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o bxtools-bxconvert.obj `if test -f 'bxconvert.cpp'; then $(CYGPATH_W) 'bxconvert.cpp'; else $(CYGPATH_W) '$(srcdir)/bxconvert.cpp'; fi`
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
