@@ -22,15 +22,17 @@ namespace opt {
   static bool verbose = false; 
   static bool noop = false; // dont write bams, just count
   static int min = 0; // minimum number of reads before writing
+  static std::string tag = "BX"; // tag to split by
 }
 
-static const char* shortopts = "hvxb:a:m:";
+static const char* shortopts = "hvxb:a:m:t:";
 static const struct option longopts[] = {
   { "help",                    no_argument, NULL, 'h' },
   { "no-output",               no_argument, NULL, 'x' },
   { "analysis-id",             required_argument, NULL, 'a' },
   { "verbose",                 no_argument, NULL, 'v' },
   { "min-reads",               required_argument, NULL, 'm' },
+  { "tag",                     required_argument, NULL, 't' },
   { NULL, 0, NULL, 0 }
 };
 
@@ -44,6 +46,7 @@ static const char *SPLIT_USAGE_MESSAGE =
 "  -a, --analysis-id                    ID to prefix output files with [foo]\n"
 "  -x, --no-output                      Don't output BAMs (count only) [off]\n"
 "  -m, --min-reads                      Minumum reads of given tag to see before writing [0]\n"
+"  -t, --tag                            Split by a tag other than BX (e.g. MI)\n"
 "\n";
 
 void parseSplitOptions(int argc, char** argv) {
@@ -65,6 +68,7 @@ void parseSplitOptions(int argc, char** argv) {
     case 'v': opt::verbose = true; break;
     case 'x': opt::noop = true; break;
     case 'm': arg >> opt::min; break;
+    case 't': arg >> opt::tag; break;
     }
   }
 
@@ -97,11 +101,11 @@ void runSplit(int argc, char** argv) {
 
     // sanity check
     if (count == 100000 && !tags.size())
-      std::cerr << "****1e5 reads in and haven't hit BX tag yet****" << std::endl;
+      std::cerr << "****1e5 reads in and haven't hit " << opt::tag << " tag yet****" << std::endl;
 
-    std::string bx = r.GetZTag("BX");
+    std::string bx;
+    r.GetZTag(opt::tag, bx);
     if (bx.empty()) {
-      //std::cerr << "BX tag empty for read: " << r << std::endl;
       continue;
     }
       

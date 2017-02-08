@@ -12,12 +12,13 @@ namespace opt {
 
   static std::string bam; // the bam to analyze
   static bool verbose = false; 
-
+  static std::string tag = "BX"; // tag to split by
 }
 
-static const char* shortopts = "hv";
+static const char* shortopts = "hvt:";
 static const struct option longopts[] = {
   { "help",                    no_argument, NULL, 'h' },
+  { "tag",                     required_argument, NULL, 't' },
   { "bam",                     required_argument, NULL, 'b' },
   { NULL, 0, NULL, 0 }
 };
@@ -28,11 +29,14 @@ static const char *STAT_USAGE_MESSAGE =
 "\n"
 "  General options\n"
 "  -v, --verbose                        Set verbose output\n"
+"  -t, --tag                            Collect stats by a tag other than BX (e.g. MI)\n"
 "\n";
+
+static void parseOptions(int argc, char** argv);
 
 void runStat(int argc, char** argv) {
   
-  parseStatOptions(argc, argv);
+  parseOptions(argc, argv);
 
   // open the BAM
   SeqLib::BamReader reader;
@@ -47,22 +51,12 @@ void runStat(int argc, char** argv) {
   SeqLib::BamRecord r;
   size_t count = 0;
   while (reader.GetNextRecord(r)) {
-    
-    ++count;
-
-    // sanity check
-    if (count == 100000 && !bxstats.size())
-      std::cerr << "****1e5 reads in and haven't hit BX tag yet****" << std::endl;
-    
-    std::string bx = r.GetZTag("BX");
-    if (bx.empty()) {
-      //std::cerr << "BX tag empty for read: " << r << std::endl;
+    std::string bx;
+    bool tag_present = r.GetZTag(opt::tag, bx);
+    BXLOOPCHECK(r, bxstats.size(), opt::tag)
+    if (!tag_present)
       continue;
-    }
-      
-    if (count % 1000000 == 0)
-      std::cerr << "...at read " << SeqLib::AddCommas(count) << " at pos " << r.Brief() << std::endl;
-    
+
     ++bxstats[bx].count;
     bxstats[bx].bx = bx;
     if (r.PairMappedFlag() && !r.Interchromosomal())
@@ -77,7 +71,7 @@ void runStat(int argc, char** argv) {
 
 }
 
-void parseStatOptions(int argc, char** argv) {
+static void parseOptions(int argc, char** argv) {
 
   bool die = false;
   bool help = false;
@@ -97,17 +91,14 @@ void parseStatOptions(int argc, char** argv) {
     }
   }
 
-  if (die || help) 
-    {
-      std::cerr << "\n" << STAT_USAGE_MESSAGE;
-      if (die)
-	exit(EXIT_FAILURE);
-      else 
-	exit(EXIT_SUCCESS);	
-    }
+  if (die || help) {
+    std::cerr << "\n" << STAT_USAGE_MESSAGE;
+    die ? exit(EXIT_FAILURE) : exit(EXIT_SUCCESS);	
+  }
 
 }
 
+//http://stackoverflow.com/questions/2114797/compute-median-of-values-stored-in-vector-c
 static double CalcMHWScore(std::vector<int> scores) {
   double median;
   size_t size = scores.size();
@@ -115,13 +106,21 @@ static double CalcMHWScore(std::vector<int> scores) {
   std::sort(scores.begin(), scores.end());
 
   if (size  % 2 == 0)
-    {
       median = (scores[size / 2 - 1] + scores[size / 2]) / 2;
-    }
   else 
-    {
       median = scores[size / 2];
-    }
 
   return median;
 }
+
+std::ostream& operator<<(std::ostream& out, const BXStat& b) {
+  double isize_med = -1;
+  double mapq_med = -1;
+  if (b.isize.size())
+    isize_med = CalcMHWScore(b.isize);
+  if (b.mapq.size())
+    mapq_med = CalcMHWScore(b.mapq);
+  out << b.bx << "\t" << b.count << "\t" << isize_med << "\t" << mapq_med;
+  return out;
+}
+

@@ -14,6 +14,7 @@ Table of contents
     * [Stats](#stats)
     * [Tile](#tile)
     * [Relabel](#relabel)
+    * [Mol](#mol)
   * [Example Recipes](#examples-recipes)
   * [Attributions](#attributions)
 
@@ -76,6 +77,16 @@ Move the BX barcodes from the ``BX`` tag (e.g. ``BX:ACTTACCGA``) to the read nam
 ```
 VERBOSE=-v ## print progress
 bxtools relabel $bam $VERBOSE > relabeled.bam
+```
+
+#### Mol
+Get the minimum molecular footprint on the genome as BED file for each MI tag. The 
+minimal footprint is defined from the minimum start position to the maximum end position of 
+all reads sharing an MI tag. Throws an error message if detects the same MI tag on multiple chromosomes.
+
+The output BED format is chr, start, end, MI, BX, read_count
+```
+bxtools mol $bam > mol_footprint.bed
 ```
 
 Example recipes

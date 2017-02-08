@@ -7,14 +7,13 @@
     exit(EXIT_FAILURE); \
   }			\
 
-#define BXLOOPCHECK(r, found)							\
+#define BXLOOPCHECK(r, found, tag)						\
     ++count;								\
     if (count == 100000 && !(found))					\
-      std::cerr << "****1e5 reads in and haven't hit BX tag yet****" << std::endl; \
-    std::string bx = r.GetZTag("BX");					\
-    if (bx.empty())							\
-      continue;								\
-    if (count % 1000000 == 0)						\
+      std::cerr << "****1e5 reads in and haven't hit " << tag << " tag yet****" << std::endl; \
+    if (count == 1000000 && !(found))					\
+      std::cerr << "****1e6 reads in and haven't hit " << tag << " tag yet****" << std::endl; \
+    if (count % 1000000 == 0 && opt::verbose)					\
       std::cerr << "...at read " << SeqLib::AddCommas(count) << " at pos " << r.Brief() << std::endl;
     
 #endif
