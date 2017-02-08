@@ -111,6 +111,8 @@ This project is developed and maintained by Jeremiah Wala (jwala@broadinstitute.
 Analysis suggestions and 10X support
 * Gavin Ha - Postdoctoral Fellow, Broad Institute
 * Srinivas Viswanathan - Oncology Fellow, Dana Farber Cancer Institute
+* Chris Whelan - Computational Biologist, Broad Institute
+* Tushar Kamath - MD-PhD Student, Harvard Medical School
 * Cheng-Zhong Zhang - Assistant Professor, Dana Farber Cancer Institute
 * Marcin Imielinski - Assistant Professor, Weill Cornell Medical College
 * Rameen Beroukhim - Assistant Professor, Dana Farber Cancer Institute
