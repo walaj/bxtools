@@ -9,23 +9,24 @@
 #include "SeqLib/GenomicRegionCollection.h"
 
 #include "bxcommon.h"
+#include <cassert>
 
 namespace opt {
 
-  static std::string bam; // the bam to analyze                                 
+  static std::string bam; // the bam to analyze
+  static std::string analysis_id = "foo"; // unique prefix for new BAM output
   static bool verbose = false;
   static int width = 1000;
-  static int overlap = 0;
   static std::string bed; // optional bed file                                  
 }
 
-static const char* shortopts = "hvw:O:b:";
+static const char* shortopts = "hvw:a:b:";
 static const struct option longopts[] = {
   { "help",                    no_argument, NULL, 'h' },
   { "bed",                     required_argument, NULL, 'b' },
   { "pad",                     required_argument, NULL, 'p' },
   { "width",                   required_argument, NULL, 'w' },
-  { "overlap",                 required_argument, NULL, 'O' },
+  { "analysis-id",                 required_argument, NULL, 'a' },
   { NULL, 0, NULL, 0 }
 };
 
@@ -39,18 +40,54 @@ static const struct option longopts[] = {
     SeqLib::BamHeader hdr = reader.Header();
     
     SeqLib::BamRecord r;
+    SeqLib::BamWriter w;
     size_t count = 0;
     std::unordered_map<std::string, size_t> bxtags;
-
+    std::stringstream ss;
+    const std::string empty_tag = "Empty";
+    if (opt::bam.compare("-") == 0){
+      std::cerr << "Cant accept standard input as file" << std::endl;
+      exit(EXIT_FAILURE);
+    }
+    // Loop through file once to grab all BX tags and store in string to generate header
+    ss << "@HD" << "\t" << "VN:1.4" << "  " << "GO:none SO:unsorted" << std::endl;  
     while (reader.GetNextRecord(r)){
-      if (!bxtags.count(r.GetZTag("BX"))) {
-        bxtags.insert(std::pair<std::string, size_t>(r.GetZTag("BX"), ++count));
+      std::string bx = r.GetZTag("BX");
+      if (bx.empty()){
+	bx = empty_tag;
       }
-      std::string chr = hdr.IDtoName(r.ChrID());
-      r.SetChrID(bxtags[r.GetZTag("BX")]);
-      r.AddZTag("CR", chr);
-        }
+      assert(!bx.empty());
+      if (!bxtags.count(bx)) {
+        bxtags.insert(std::pair<std::string, size_t>(bx, count));
+	++count;      
+	ss << "@SQ" << "\t" << "SN:" << bx << "\t" << "LN:500000000" << std::endl;
+      }    
+      
+    }
+    //write new header based on string generated from BX tags
+    SeqLib::BamHeader bxbamheader (ss.str());
+    //std::string newbname = opt::analysis_id + "_BXsorted" + ".bam";
+    w.Open("/broad/hptmp/tkamath/foobar.bam");
+    w.SetHeader(bxbamheader);
+    w.WriteHeader();
+    
+    //Loop through the BAM file again
+    reader.Close();
+    SeqLib::BamReader reader2;
+    BXOPEN(reader2, opt::bam);
+    SeqLib::BamRecord rr;
+    while (reader2.GetNextRecord(rr)){
+      std::string bx = rr.GetZTag("BX");
+      if (bx.empty()){
+	bx = empty_tag;
+      }
 
+        std::string chr = hdr.IDtoName(rr.ChrID());
+        rr.SetChrID(bxtags[bx]);
+        rr.AddZTag("CR", chr); 
+        w.WriteRecord(rr);
+    }
+    w.Close();
   }
 
 
@@ -73,7 +110,7 @@ void parseConvertOptions(int argc, char** argv) {
       case 'v': opt::verbose = true; break;
       case 'h': help = true; break;
       case 'w': arg >> opt::width; break;
-      case 'O': arg >> opt::overlap; break;
+      case 'a': arg >> opt::analysis_id; break;
       case 'b': arg >> opt::bed; break;
       }
     }
