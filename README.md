@@ -4,6 +4,8 @@
 
 **License:** [MIT][license]
 
+## Note: *bxtools* is an emerging project. If you find an operation that you need that may be in the scope of *bxtools*, please submit an issue report or pull request with the suggested functionality. We are looking for community suggestions for what we might include.
+
 Table of contents
 =================
 
