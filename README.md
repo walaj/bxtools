@@ -17,6 +17,7 @@ Table of contents
     * [Tile](#tile)
     * [Relabel](#relabel)
     * [Mol](#mol)
+    * [Convert](#convert)
   * [Example Recipes](#examples-recipes)
   * [Attributions](#attributions)
 
@@ -90,6 +91,17 @@ The output BED format is chr, start, end, MI, BX, read_count
 ```
 bxtools mol $bam > mol_footprint.bed
 ```
+
+#### Convert
+Switch the alignment chromosome with the BX tag. This is a hack to allow a 10X BAM to be sorted and indexed by BX tag, rather than coordinate. 
+Useful for rapid lookup of all BX reads from a particular BX. Note that this switches "-" for "_" to make query possible with ``samtools view``.
+This also requires a two-pass solution. The first loop is to get all of the unique BX tags to build the new BAM header. The second makes the switches.
+This means that streaming from ``stdin`` is not available.
+``
+bxtools convert $bam | samtools sort - -o bx_sorted.bam
+samtools index bx_sorted.bam
+samtools view AGTCCAAGTCGGAAGT_1
+``
 
 Example recipes
 ---------------
