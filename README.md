@@ -97,11 +97,12 @@ Switch the alignment chromosome with the BX tag. This is a hack to allow a 10X B
 Useful for rapid lookup of all BX reads from a particular BX. Note that this switches "-" for "_" to make query possible with ``samtools view``.
 This also requires a two-pass solution. The first loop is to get all of the unique BX tags to build the new BAM header. The second makes the switches.
 This means that streaming from ``stdin`` is not available.
-``
+
+```
 bxtools convert $bam | samtools sort - -o bx_sorted.bam
 samtools index bx_sorted.bam
 samtools view AGTCCAAGTCGGAAGT_1
-``
+```
 
 Example recipes
 ---------------
@@ -118,13 +119,13 @@ samtools view -h $bam 1:1-10,000,000 | grep -v -F -f excluded_list.txt | bxtools
 Attributions
 ------------
 
-This project is developed and maintained by Jeremiah Wala (jwala@broadinstitute.org).
+This project is developed and maintained by Jeremiah Wala (jwala@broadinstitute.org)
 
 Analysis suggestions and 10X support
+* Tushar Kamath - MD-PhD Student, Harvard Medical School
 * Gavin Ha - Postdoctoral Fellow, Broad Institute
 * Srinivas Viswanathan - Oncology Fellow, Dana Farber Cancer Institute
 * Chris Whelan - Computational Biologist, Broad Institute
-* Tushar Kamath - MD-PhD Student, Harvard Medical School
 * Cheng-Zhong Zhang - Assistant Professor, Dana Farber Cancer Institute
 * Marcin Imielinski - Assistant Professor, Weill Cornell Medical College
 * Rameen Beroukhim - Assistant Professor, Dana Farber Cancer Institute
