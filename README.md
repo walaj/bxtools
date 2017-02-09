@@ -4,6 +4,8 @@
 
 **License:** [MIT][license]
 
+## Note: *bxtools* is an emerging project. If you find an operation that you need that may be in the scope of *bxtools*, please submit an issue report or pull request with the suggested functionality. We are looking for community suggestions for what we might include.
+
 Table of contents
 =================
 
@@ -14,6 +16,7 @@ Table of contents
     * [Stats](#stats)
     * [Tile](#tile)
     * [Relabel](#relabel)
+    * [Mol](#mol)
   * [Example Recipes](#examples-recipes)
   * [Attributions](#attributions)
 
@@ -78,6 +81,16 @@ VERBOSE=-v ## print progress
 bxtools relabel $bam $VERBOSE > relabeled.bam
 ```
 
+#### Mol
+Get the minimum molecular footprint on the genome as BED file for each MI tag. The 
+minimal footprint is defined from the minimum start position to the maximum end position of 
+all reads sharing an MI tag. Throws an error message if detects the same MI tag on multiple chromosomes.
+
+The output BED format is chr, start, end, MI, BX, read_count
+```
+bxtools mol $bam > mol_footprint.bed
+```
+
 Example recipes
 ---------------
 #### Get BX level coverage in 2kb bins across genome, ignore low-frequency tags
@@ -98,6 +111,8 @@ This project is developed and maintained by Jeremiah Wala (jwala@broadinstitute.
 Analysis suggestions and 10X support
 * Gavin Ha - Postdoctoral Fellow, Broad Institute
 * Srinivas Viswanathan - Oncology Fellow, Dana Farber Cancer Institute
+* Chris Whelan - Computational Biologist, Broad Institute
+* Tushar Kamath - MD-PhD Student, Harvard Medical School
 * Cheng-Zhong Zhang - Assistant Professor, Dana Farber Cancer Institute
 * Marcin Imielinski - Assistant Professor, Weill Cornell Medical College
 * Rameen Beroukhim - Assistant Professor, Dana Farber Cancer Institute

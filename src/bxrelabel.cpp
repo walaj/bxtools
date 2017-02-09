@@ -29,7 +29,7 @@ static const char *RELABEL_USAGE_MESSAGE =
 "  -h, --help                           Display this help and exit\n"
 "\n";
 
-void parseRelabelOptions(int argc, char** argv) {
+static void parseOptions(int argc, char** argv) {
 
   bool die = false;
   if (argc < 2) 
@@ -53,9 +53,11 @@ void parseRelabelOptions(int argc, char** argv) {
   }
 }
 
+static void parseOptions(int argc, char** argv);
+
 void runRelabel(int argc, char** argv) {
 
-  parseRelabelOptions(argc, argv);
+  parseOptions(argc, argv);
   
   // open the read BAM
   SeqLib::BamReader reader;
@@ -85,7 +87,8 @@ void runRelabel(int argc, char** argv) {
     if (count == 100000 && !bxtaghit)
       std::cerr << "****1e5 reads in and haven't hit BX tag yet****" << std::endl;
 
-    std::string bx = r.GetZTag("BX");
+    std::string bx;
+    r.GetZTag("BX", bx);
     if (bx.empty()) {
       if (opt::verbose)
 	std::cerr << "BX tag empty for read: " << r << std::endl;

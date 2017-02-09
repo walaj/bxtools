@@ -16,15 +16,17 @@ namespace opt {
   static int width = 1000;
   static int overlap = 0;
   static std::string bed; // optional bed file
+  static std::string tag = "BX"; // tag to split by
 }
 
-static const char* shortopts = "hvw:O:b:";
+static const char* shortopts = "hvw:O:b:t:";
 static const struct option longopts[] = {
   { "help",                    no_argument, NULL, 'h' },
   { "bed",                     required_argument, NULL, 'b' },
   { "pad",                     required_argument, NULL, 'p' },
   { "width",                   required_argument, NULL, 'w' },
   { "overlap",                 required_argument, NULL, 'O' },
+  { "tag",                     required_argument, NULL, 't' },
   { NULL, 0, NULL, 0 }
 };
 
@@ -37,6 +39,7 @@ static const char *TILE_USAGE_MESSAGE =
 "  -w, --width           Width of the tile [1000]\n"
 "  -O, --overlap         Overlap of the tiles [0]\n"
 "  -b, --bed             Rather than tile genome, input BED with regions\n"
+"  -t, --tag             Tag other than BX to evaluate (e.g. MI)\n"
 "\n";
 
 class BXRegion : public SeqLib::GenomicRegion {
@@ -63,9 +66,11 @@ public:
   }
 };
 
+static void parseOptions(int argc, char** argv);
+
 void runTile(int argc, char** argv) {
   
-  parseTileOptions(argc, argv);
+  parseOptions(argc, argv);
 
   SeqLib::BamReader reader;
   BXOPEN(reader, opt::bam);
@@ -91,7 +96,11 @@ void runTile(int argc, char** argv) {
   size_t count = 0; 
   size_t bxcount = 0;
   while (reader.GetNextRecord(r)) {
-    BXLOOPCHECK(r, bxcount);
+    std::string bx;
+    r.GetZTag("BX", bx);
+    BXLOOPCHECK(r, bxcount, opt::tag);
+    if (bx.empty())
+      continue;
 
     if (r.MappedFlag()) {
       std::vector<int> bins = tiles->FindOverlappedIntervals(r.AsGenomicRegion(), true);
@@ -110,7 +119,7 @@ void runTile(int argc, char** argv) {
   
 }
 
-void parseTileOptions(int argc, char** argv) {
+static void parseOptions(int argc, char** argv) {
 
   bool die = false;
   bool help = false;
