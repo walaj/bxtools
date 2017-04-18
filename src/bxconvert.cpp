@@ -59,7 +59,7 @@ void runConvert(int argc, char** argv) {
       std::cerr << "...starting first pass to tally unique BX tag" << std::endl;
 
     // Loop through file once to grab all BX tags and store in string to generate header
-    ss << "@HD" << "\t" << "VN:1.4" << "  " << "GO:none SO:unsorted" << std::endl;  
+    ss << "@HD" << "\t" << "VN:1.4" << "  " << "GO:none\tSO:unsorted" << std::endl;  
     while (reader.GetNextRecord(r)){
       read_bx(bx, r);
 
