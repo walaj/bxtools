@@ -22,6 +22,7 @@ static const char *USAGE_MESSAGE =
 "           tile           Collect BX-level coverage in tiles or regions along genome\n"
 "           relabel        Move BX barcodes from BX tags (e.g. BX:TAATACG) to qname_TAATACG\n"
 "           mol            Output BED with footprint of each molecule (from MI tag)\n"
+"           convert        Flip the BX tag and chromosome, so as to allow for a BX-sorted and indexable BAM\n"
 "\nReport bugs to jwala@broadinstitute.org \n\n";
 
 int main(int argc, char** argv) {

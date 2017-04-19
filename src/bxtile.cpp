@@ -97,7 +97,7 @@ void runTile(int argc, char** argv) {
   size_t bxcount = 0;
   while (reader.GetNextRecord(r)) {
     std::string bx;
-    r.GetZTag("BX", bx);
+    r.GetTag(opt::tag, bx);
     BXLOOPCHECK(r, bxcount, opt::tag);
     if (bx.empty())
       continue;
@@ -126,8 +126,8 @@ static void parseOptions(int argc, char** argv) {
 
   if (argc < 2) 
     die = true;
-
-  opt::bam = std::string(argv[1]);
+  else
+    opt::bam = std::string(argv[1]);
 
   std::stringstream ss;
 
@@ -139,6 +139,7 @@ static void parseOptions(int argc, char** argv) {
     case 'w': arg >> opt::width; break;
     case 'O': arg >> opt::overlap; break;
     case 'b': arg >> opt::bed; break;
+    case 't': arg >> opt::tag; break;
     }
   }
 

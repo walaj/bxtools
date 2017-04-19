@@ -1,5 +1,6 @@
 #include "bxsplit.h"
 
+#include "bxcommon.h"
 #include <string>
 #include <getopt.h>
 #include <iostream>
@@ -55,8 +56,8 @@ void parseSplitOptions(int argc, char** argv) {
 
   if (argc < 2) 
     die = true;
-
-  opt::bam = std::string(argv[1]);
+  else
+    opt::bam = std::string(argv[1]);
 
   bool help = false;
   std::stringstream ss;
@@ -95,23 +96,22 @@ void runSplit(int argc, char** argv) {
   // loop and write
   SeqLib::BamRecord r;
   size_t count = 0;
+  bool hit = false;
   while (reader.GetNextRecord(r)) {
 
     ++count;
 
     // sanity check
-    if (count == 100000 && !tags.size())
-      std::cerr << "****1e5 reads in and haven't hit " << opt::tag << " tag yet****" << std::endl;
+    BXLOOPCHECK(r, hit, opt::tag)
 
     std::string bx;
-    r.GetZTag(opt::tag, bx);
+    r.GetTag(opt::tag, bx);
     if (bx.empty()) {
       continue;
+    } else {
+      hit = true;
     }
-      
-    if (count % 1000000 == 0)
-      std::cerr << "...at read " << SeqLib::AddCommas(count) << " at pos " << r.Brief() << std::endl;
-
+    
     ++tags[bx].count;
 
     if (opt::noop)

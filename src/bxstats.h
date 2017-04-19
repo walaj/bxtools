@@ -15,6 +15,7 @@ struct BXStat {
   size_t count;   // number of reads
   std::vector<int> isize; // insert size
   std::vector<int> mapq;  // mapping quality
+  std::vector<float> as;  // alignment quality
   
   friend std::ostream& operator<<(std::ostream& out, const BXStat& b);
 

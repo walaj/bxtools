@@ -63,7 +63,6 @@ void runStat(int argc, char** argv) {
       bxstats[bx].isize.push_back(std::abs(r.InsertSize()));
     if (r.MappedFlag())
       bxstats[bx].mapq.push_back(std::abs(r.MapQuality()));
-    
   }
 
   for (const auto& b : bxstats)
@@ -78,8 +77,8 @@ static void parseOptions(int argc, char** argv) {
 
   if (argc < 2) 
     die = true;
-
-  opt::bam = std::string(argv[1]);
+  else
+    opt::bam = std::string(argv[1]);
 
   std::stringstream ss;
 
