@@ -67,7 +67,7 @@ void runConvert(int argc, char** argv) {
       if (!bxtags.count(bx)) {
         bxtags.insert(std::pair<std::string, size_t>(bx, unique_bx));
 	++unique_bx;      
-	ss << "@SQ" << "\t" << "SN:" << bx << "\t" << "LN:500000000" << std::endl;
+	ss << "@SQ" << "\t" << "SN:" << bx << "\t" << "LN:1" << std::endl;
       }    
       
     }
@@ -93,6 +93,7 @@ void runConvert(int argc, char** argv) {
       r.SetChrID(bxtags[bx]);
       r.AddZTag("CR", chr); 
       r.SetChrIDMate(-1);
+      r.SetPosition(0);
       w.WriteRecord(r);
 
     }
