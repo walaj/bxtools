@@ -47,7 +47,6 @@ public:
   int nr = 0; // num reads
   std::string chr_string;
 
-
   bool add(const SeqLib::BamRecord& r, const SeqLib::BamHeader h) {
     
     if (!r.GetIntTag("MI", mi)) // skip if not there

@@ -11,6 +11,7 @@
 #include <bxrelabel.h>
 #include <bxconvert.h>
 #include <bxmol.h>
+#include <bxgroup.h>
 
 static const char *USAGE_MESSAGE =
 "Program: bxtools \n"
@@ -20,6 +21,7 @@ static const char *USAGE_MESSAGE =
 "           split          Split a BAM into multiple BAMs, one per BX tag\n"
 "           stats          Collect BX-level statistics across a BAM\n"
 "           tile           Collect BX-level coverage in tiles or regions along genome\n"
+"           group          Group together BX tags into molecules\n"
 "           relabel        Move BX barcodes from BX tags (e.g. BX:TAATACG) to qname_TAATACG\n"
 "           mol            Output BED with footprint of each molecule (from MI tag)\n"
 "           convert        Flip the BX tag and chromosome, so as to allow for a BX-sorted and indexable BAM\n"
@@ -39,15 +41,14 @@ int main(int argc, char** argv) {
       runSplit(argc -1, argv + 1);
     } else if (command == "stats") {
       runStat(argc -1, argv + 1);
-    }
-    else if (command == "tile") {
+    } else if (command == "tile") {
       runTile(argc -1, argv + 1);
-    }
-    else if (command == "relabel") {
+    } else if (command == "relabel") {
       runRelabel(argc -1, argv + 1);
-    }
-    else if (command == "convert"){
+    } else if (command == "convert"){
       runConvert(argc -1, argv + 1);
+    } else if (command == "group") {
+      runGroup(argc -1, argv + 1);
     } else if (command == "mol") {
       runMol(argc -1, argv + 1);
     }
