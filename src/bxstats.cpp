@@ -71,8 +71,13 @@ void runStat(int argc, char** argv) {
       bxstats[bx].as.push_back(as_int);
     else if (r.GetFloatTag("AS", as_float))
       bxstats[bx].as.push_back(as_float);
-    else if (r.GetZTag("AS", as_string))
-      bxstats[bx].as.push_back(as_float);
+    else if (r.GetZTag("AS", as_string)) {
+      try {
+	bxstats[bx].as.push_back(std::stof(as_string));
+      } catch (...) {
+	std::cerr << "Could not convert AS:Z val of " << as_string << " to float" << std::endl;
+      }
+    }
 
   }
 
