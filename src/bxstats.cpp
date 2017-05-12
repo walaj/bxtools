@@ -66,10 +66,14 @@ void runStat(int argc, char** argv) {
 
     int as_int = -1;
     float as_float = -1;
+    std::string as_string = "NA";
     if (r.GetIntTag("AS", as_int))
       bxstats[bx].as.push_back(as_int);
     else if (r.GetFloatTag("AS", as_float))
       bxstats[bx].as.push_back(as_float);
+    else if (r.GetZTag("AS", as_string))
+      bxstats[bx].as.push_back(as_float);
+
   }
 
   for (const auto& b : bxstats)
