@@ -45,13 +45,9 @@ static const char *GROUP_USAGE_MESSAGE =
 "  General options\n"
 "  -v, --verbose                        Select verbosity level (0-4). Default: 0 \n"
 "  -h, --help                           Display this help and exit\n"
-"  -a, --analysis-id                    ID to prefix output files with [foo]\n"
-"  -x, --no-output                      Don't output BAMs (count only) [off]\n"
-"  -m, --min-reads                      Minumum reads of given tag to see before writing [0]\n"
-"  -t, --tag                            Split by a tag other than BX (e.g. MI)\n"
 "\n";
 
-void parseGroupOptions(int argc, char** argv) {
+static void parseOptions(int argc, char** argv) {
 
   bool die = false;
 
@@ -66,7 +62,6 @@ void parseGroupOptions(int argc, char** argv) {
   for (char c; (c = getopt_long(argc, argv, shortopts, longopts, NULL)) != -1;) {
     std::istringstream arg(optarg != NULL ? optarg : "");
     switch (c) {
-    case 'a': arg >> opt::analysis_id; break;
     case 'v': opt::verbose = true; break;
     case 't': arg >> opt::tag; break;
     }
@@ -80,7 +75,10 @@ void parseGroupOptions(int argc, char** argv) {
 
 void runGroup(int argc, char** argv) {
   
-  parseGroupOptions(argc, argv);
+  std::cerr << "!! NOT YET IMPLEMENTED !!" << std::endl;
+  return;
+  
+  parseOptions(argc, argv);
   
   // opeen the BAM
   SeqLib::BamReader reader;
