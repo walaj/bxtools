@@ -12,16 +12,14 @@ namespace opt {
 
   static std::string bam; // the bam to analyze
   static bool verbose = false; 
-  static char astagtype = ' ';
   static std::string tag = "BX"; // tag to split by
 }
 
-static const char* shortopts = "hvt:A:";
+static const char* shortopts = "hvt:";
 static const struct option longopts[] = {
   { "help",                    no_argument, NULL, 'h' },
   { "tag",                     required_argument, NULL, 't' },
   { "bam",                     required_argument, NULL, 'b' },
-  { "as-tag-type",             required_argument, NULL, 'A' },
   { NULL, 0, NULL, 0 }
 };
 
@@ -32,7 +30,6 @@ static const char *STAT_USAGE_MESSAGE =
 "  General options\n"
 "  -v, --verbose                        Set verbose output\n"
 "  -t, --tag                            Collect stats by a tag other than BX (e.g. MI)\n"
-"  -A, --as-tag-type                    Alignment info type (Z, i, or f). e.g. AS:Z:10.\n"
 "\n";
 
 static void parseOptions(int argc, char** argv);
@@ -60,18 +57,6 @@ void runStat(int argc, char** argv) {
     if (!tag_present)
       continue;
 
-    float as = -1;
-      
-    //debug
-    std::string as_string = "NA";
-    int as_int = -1;
-    /*std::cerr << " STRING " << r.GetZTag("AS", as_string);
-    std::cerr << " INT " << r.GetIntTag("AS", as_int);
-    std::cerr << " FLOAT " << r.GetFloatTag("AS", as);
-    std::cerr << " STRINGVAL " << as_string << " INT " << as_int << " FLOAT " << as << std::endl;
-    break;
-    */
-
     ++bxstats[bx].count;
     bxstats[bx].bx = bx;
     if (r.PairMappedFlag() && !r.Interchromosomal())
@@ -79,29 +64,12 @@ void runStat(int argc, char** argv) {
     if (r.MappedFlag())
       bxstats[bx].mapq.push_back(std::abs(r.MapQuality()));
 
-    switch(opt::astagtype) {
-    case ' ':
-      std::cerr << std::endl << "!! No AS tag type given. Not calculating AS stats !!" << std::endl << std::endl;
-      opt::astagtype = 'X';
-      break;
-    case 'f':
-      if (r.GetFloatTag("AS", as))
-	bxstats[bx].as.push_back(as);
-      break;
-    case 'Z': 
-      if (r.GetZTag("AS", as_string))
-	try {
-	  bxstats[bx].as.push_back(std::stod(as_string));
-	} catch (...) {
-	  std::cerr << "ERROR: Could not convert AS of type Z with value " << as_string << " to double" << std::endl;
-	}
-      break;
-    case 'i': 
-      if (r.GetIntTag("AS", as_int))
-	bxstats[bx].as.push_back(as_int);
-      break;
-    }
-
+    int as_int = -1;
+    float as_float = -1;
+    if (r.GetIntTag("AS", as_int))
+      bxstats[bx].as.push_back(as_int);
+    else if (r.GetFloatTag("AS", as_float))
+      bxstats[bx].as.push_back(as_float);
   }
 
   for (const auto& b : bxstats)
@@ -124,9 +92,6 @@ static void parseOptions(int argc, char** argv) {
     switch (c) {
     case 'v': opt::verbose = true; break;
     case 'h': help = true; break;
-    case 'A': 
-      opt::astagtype = arg.str().at(0);
-      break;
     }
   }
 
