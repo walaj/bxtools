@@ -18,17 +18,23 @@ static const char *CONVERT_USAGE_MESSAGE =
 "\n"
 "  General options\n"
 "  -v, --verbose         Set verbose output\n"
+"  -k, --keep-tags       Add chromosome tag (CR) and keep other tags. Default: delete all tags\n"
+"  -t, --tag             Tag to flip for chromosome. Default: BX\n"
 "\n";
 
 namespace opt {
   static bool verbose = false;
   static std::string bam;
+  static bool keeptags = false;
+  static std::string tag = "BX";
 }
 
-static const char* shortopts = "hv";
+static const char* shortopts = "hvkt:";
 static const struct option longopts[] = {
   { "help",                    no_argument, NULL, 'h' },
   { "verbose",                 no_argument, NULL, 'v' },
+  { "keep-tags",               no_argument, NULL, 'k' },
+  { "tag",                     required_argument, NULL, 't' },
   { NULL, 0, NULL, 0 }
 };
 
@@ -37,7 +43,7 @@ static const std::string empty_tag = "Empty";
 
 void runConvert(int argc, char** argv) {
 
-    parseConvertOptions(argc, argv);
+    parseOptions(argc, argv);
 
     SeqLib::BamReader reader;
     BXOPEN(reader, opt::bam);
@@ -56,14 +62,14 @@ void runConvert(int argc, char** argv) {
     }
 
     if (opt::verbose)
-      std::cerr << "...starting first pass to tally unique BX tag" << std::endl;
+      std::cerr << "...starting first pass to tally unique " << opt::tag << " tag" << std::endl;
 
     // Loop through file once to grab all BX tags and store in string to generate header
     ss << "@HD" << "\t" << "VN:1.4" << "  " << "GO:none\tSO:unsorted" << std::endl;  
     while (reader.GetNextRecord(r)){
       read_bx(bx, r);
 
-      BXLOOPCHECK(r, unique_bx > 1, "BX")
+      BXLOOPCHECK(r, unique_bx > 1, opt::tag)
       if (!bxtags.count(bx)) {
         bxtags.insert(std::pair<std::string, size_t>(bx, unique_bx));
 	++unique_bx;      
@@ -85,23 +91,28 @@ void runConvert(int argc, char** argv) {
     
     if (opt::verbose)
       std::cerr << "...starting second pass to flip chr and BX" << std::endl;
-    
+
     while (reader2.GetNextRecord(r)){
-      read_bx(bx, r);
-      BXLOOPCHECK(r, true, "BX")
-      std::string chr = hdr.IDtoName(r.ChrID());
+
+      read_bx(bx, r); // read the BX tag. Set default if not present
+      BXLOOPCHECK(r, true, opt::tag) // read and check we have a BX
       r.SetChrID(bxtags[bx]);
-      r.AddZTag("CR", chr); 
+
       r.SetChrIDMate(-1);
       r.SetPosition(0);
-      w.WriteRecord(r);
 
+      if (opt::keeptags) 
+	r.AddZTag("CR", r.ChrID() >= 0 ? hdr.IDtoName(r.ChrID()) : "*"); 
+      else
+	r.RemoveAllTags();
+
+      w.WriteRecord(r);
     }
     w.Close();
   }
 
 
-void parseConvertOptions(int argc, char** argv) {
+void parseOptions(int argc, char** argv) {
 
   bool die = false;
   bool help = false;
@@ -119,6 +130,8 @@ void parseConvertOptions(int argc, char** argv) {
       switch (c) {
       case 'v': opt::verbose = true; break;
       case 'h': help = true; break;
+      case 'k': opt::keeptags = true; break;
+      case 't': arg >> opt::tag;  break;
       }
     }
 
@@ -131,7 +144,7 @@ void parseConvertOptions(int argc, char** argv) {
 }
 
 static void read_bx(std::string& bx, const SeqLib::BamRecord& r) {
-  if (!r.GetZTag("BX", bx))
+  if (!r.GetZTag(opt::tag, bx))
     bx = empty_tag;
   std::replace(bx.begin(), bx.end(), '-', '_');
   assert(!bx.empty());
