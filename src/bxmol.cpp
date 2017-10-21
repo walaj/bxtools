@@ -49,9 +49,6 @@ public:
 
   bool add(const SeqLib::BamRecord& r, const SeqLib::BamHeader h) {
     
-    if (!r.GetIntTag("MI", mi)) // skip if not there
-      return true;
-    
     if (chr > 0 && chr != r.ChrID()) {
       std::cerr << "Warning: MI tag " << mi << " spans multiple chromosomes" << std::endl;
       return false;
@@ -97,8 +94,7 @@ void runMol(int argc, char** argv) {
     BXLOOPCHECK(r, molmap.size(), "MI");
     if (r.MappedFlag() && r.GetIntTag("MI", mi)) 
       molmap[mi].add(r, hdr);
-  }
-  
+  }  
   // print them out as a BED
   for (const auto& b : molmap)
     std::cout << b.second << std::endl;
