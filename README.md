@@ -61,8 +61,11 @@ Collect BX-level statistics from a 10X BAM
 
 ```
 bxtools stats $bam > stats.tsv
-## output is BX  count  median_isize  median_mapq
+## output columns: BX, read count, median insert size, median mapq, median AS.
 ```
+
+To summarize based on another tag, use `-t`. E.g. : `bxtools stats -t MI $bam`
+
 
 #### Tile
 
