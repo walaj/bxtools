@@ -62,7 +62,7 @@ void runConvert(int argc, char** argv) {
     }
 
     if (opt::verbose)
-      std::cerr << "...starting first pass to tally unique " << opt::tag << " tag" << std::endl;
+      std::cerr << "...starting first pass to tally unique " << opt::tag << " tags" << std::endl;
 
     // Loop through file once to grab all BX tags and store in string to generate header
     ss << "@HD" << "\t" << "VN:1.4" << "  " << "GO:none\tSO:unsorted" << std::endl;  
@@ -80,6 +80,9 @@ void runConvert(int argc, char** argv) {
     //write new header based on string generated from BX tags
     SeqLib::BamHeader bxbamheader (ss.str());
 
+    if (opt::verbose) 
+      std::cerr << "Found " << unique_bx << " unique barcodes" << std::endl;
+
     w.Open("-");
     w.SetHeader(bxbamheader);
     w.WriteHeader();
@@ -92,18 +95,17 @@ void runConvert(int argc, char** argv) {
     if (opt::verbose)
       std::cerr << "...starting second pass to flip chr and BX" << std::endl;
 
-    while (reader2.GetNextRecord(r)){
+    while (reader2.GetNextRecord(r)) {
+
+      if (opt::keeptags)
+	r.AddZTag("CR", r.ChrID() >= 0 ? hdr.IDtoName(r.ChrID()) : "*"); 
 
       read_bx(bx, r); // read the BX tag. Set default if not present
       BXLOOPCHECK(r, true, opt::tag) // read and check we have a BX
       r.SetChrID(bxtags[bx]);
-
       r.SetChrIDMate(-1);
       r.SetPosition(0);
-
-      if (opt::keeptags) 
-	r.AddZTag("CR", r.ChrID() >= 0 ? hdr.IDtoName(r.ChrID()) : "*"); 
-      else
+      if (!opt::keeptags)
 	r.RemoveAllTags();
 
       w.WriteRecord(r);
