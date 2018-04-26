@@ -50,7 +50,7 @@ public:
   bool add(const SeqLib::BamRecord& r, const SeqLib::BamHeader h) {
     
     if (chr > 0 && chr != r.ChrID()) {
-      std::cerr << "Warning: MI tag " << mi << " spans multiple chromosomes" << std::endl;
+      std::cerr << "Warning: " << opt::tag << " "  << mi << " spans multiple chromosomes" << std::endl;
       return false;
     }
     ++nr;
@@ -91,8 +91,8 @@ void runMol(int argc, char** argv) {
   size_t count = 0; 
   int32_t mi;
   while (reader.GetNextRecord(r)) {
-    BXLOOPCHECK(r, molmap.size(), "MI");
-    if (r.MappedFlag() && r.GetIntTag("MI", mi)) 
+    BXLOOPCHECK(r, molmap.size(), opt::tag);
+    if (r.MappedFlag() && r.GetIntTag(opt::tag, mi)) 
       molmap[mi].add(r, hdr);
   }  
   // print them out as a BED
@@ -117,7 +117,7 @@ static void parseOptions(int argc, char** argv) {
     switch (c) {
     case 'v': opt::verbose = true; break;
     case 'h': help = true; break;
-    case 't': arg >> opt::tag; break
+    case 't': arg >> opt::tag; break;
     }
   }
 
