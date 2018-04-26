@@ -117,6 +117,7 @@ static void parseOptions(int argc, char** argv) {
     switch (c) {
     case 'v': opt::verbose = true; break;
     case 'h': help = true; break;
+    case 't': arg >> opt::tag; break
     }
   }
 
