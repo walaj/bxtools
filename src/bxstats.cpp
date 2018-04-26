@@ -52,8 +52,10 @@ void runStat(int argc, char** argv) {
   size_t count = 0;
   while (reader.GetNextRecord(r)) {
     std::string bx;
-    bool tag_present = r.GetZTag(opt::tag, bx);
+    bool tag_present = r.GetTag(opt::tag, bx);
+
     BXLOOPCHECK(r, bxstats.size(), opt::tag)
+
     if (!tag_present)
       continue;
 
@@ -67,11 +69,12 @@ void runStat(int argc, char** argv) {
     int as_int = -1;
     float as_float = -1;
     std::string as_string = "NA";
-    if (r.GetIntTag("AS", as_int))
+    if (r.GetIntTag("AS", as_int)) {
       bxstats[bx].as.push_back(as_int);
-    else if (r.GetFloatTag("AS", as_float))
+    } else if (r.GetFloatTag("AS", as_float)) {
+      const std::string tt = "AS";
       bxstats[bx].as.push_back(as_float);
-    else if (r.GetZTag("AS", as_string)) {
+    } else if (r.GetZTag("AS", as_string)) {
       try {
 	bxstats[bx].as.push_back(std::stof(as_string));
       } catch (...) {
@@ -100,6 +103,7 @@ static void parseOptions(int argc, char** argv) {
     std::istringstream arg(optarg != NULL ? optarg : "");
     switch (c) {
     case 'v': opt::verbose = true; break;
+    case 't': arg >> opt::tag; break;
     case 'h': help = true; break;
     }
   }
