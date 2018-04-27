@@ -30,6 +30,7 @@ static const char *MOL_USAGE_MESSAGE =
 "\n"
 "  General options\n"
 "  -v, --verbose         Set verbose output\n"
+"  -t, --tag             Use a different tag other than MI\n"
 "\n";
 
 class BXMol {
@@ -42,8 +43,11 @@ public:
   int max = -1;
   int chr = -1;
 
-  std::string bx; // BX tag
-  int32_t mi; // MI tag
+  std::unordered_set<std::string> bx; // BX tag
+  //std::string bx; // BX tag
+  std::string mi; // MI (or -t) tag
+  std::string tmpbx; // tmp to be overwritted to hold new bx
+  
   int nr = 0; // num reads
   std::string chr_string;
 
@@ -53,9 +57,17 @@ public:
       std::cerr << "Warning: " << opt::tag << " "  << mi << " spans multiple chromosomes" << std::endl;
       return false;
     }
+
+    
+    r.GetTag(opt::tag, mi);
+
     ++nr;
-    if (bx.empty())
-      r.GetZTag("BX", bx);
+    
+    // get the BX tag
+    r.GetTag("BX", tmpbx);
+    bx.insert(tmpbx);
+
+    // set the position
     chr = r.ChrID();
     min = std::min(r.Position(), min);
     max = std::max(r.PositionEnd(), max);
@@ -67,8 +79,14 @@ public:
   }
   
   friend std::ostream& operator<<(std::ostream& out, const BXMol& b) {
+    std::stringstream ss;
+    for (auto& i : b.bx)
+      ss << i << ",";
+    std::string bxstring = ss.str();
+    if (!bxstring.empty())
+      bxstring.pop_back(); // remove last comma
     out << b.chr_string << "\t" << b.min << "\t" 
-	<< b.max << "\t" << b.mi << "\t" << b.bx << "\t" 
+	<< b.max << "\t" << b.mi << "\t" << bxstring << "\t" 
 	<< b.nr;
     return out;
   }
@@ -85,14 +103,15 @@ void runMol(int argc, char** argv) {
   BXOPEN(reader, opt::bam);
   SeqLib::BamHeader hdr = reader.Header();
 
-  std::unordered_map<int, BXMol> molmap;
+  std::unordered_map<std::string, BXMol> molmap;
 
   SeqLib::BamRecord r;
   size_t count = 0; 
-  int32_t mi;
+  std::string mi;
+  //int32_t mi;
   while (reader.GetNextRecord(r)) {
     BXLOOPCHECK(r, molmap.size(), opt::tag);
-    if (r.MappedFlag() && r.GetIntTag(opt::tag, mi)) 
+    if (r.MappedFlag() && r.GetTag(opt::tag, mi)) 
       molmap[mi].add(r, hdr);
   }  
   // print them out as a BED
