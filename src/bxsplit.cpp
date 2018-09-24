@@ -24,14 +24,16 @@ namespace opt {
   static bool noop = false; // dont write bams, just count
   static int min = 0; // minimum number of reads before writing
   static std::string tag = "BX"; // tag to split by
+  static bool include_empty = false; // output BAM with empty reads
 }
 
-static const char* shortopts = "hvxb:a:m:t:";
+static const char* shortopts = "hvxeb:a:m:t:";
 static const struct option longopts[] = {
   { "help",                    no_argument, NULL, 'h' },
   { "no-output",               no_argument, NULL, 'x' },
   { "analysis-id",             required_argument, NULL, 'a' },
   { "verbose",                 no_argument, NULL, 'v' },
+  { "include-empty",           no_argument, NULL, 'e' },
   { "min-reads",               required_argument, NULL, 'm' },
   { "tag",                     required_argument, NULL, 't' },
   { NULL, 0, NULL, 0 }
@@ -48,6 +50,7 @@ static const char *SPLIT_USAGE_MESSAGE =
 "  -x, --no-output                      Don't output BAMs (count only) [off]\n"
 "  -m, --min-reads                      Minumum reads of given tag to see before writing [0]\n"
 "  -t, --tag                            Split by a tag other than BX (e.g. MI)\n"
+"  -e, --include-empty                  Output a BAM with all of the reads with empty tag\n"
 "\n";
 
 void parseSplitOptions(int argc, char** argv) {
@@ -68,6 +71,7 @@ void parseSplitOptions(int argc, char** argv) {
     case 'a': arg >> opt::analysis_id; break;
     case 'v': opt::verbose = true; break;
     case 'x': opt::noop = true; break;
+    case 'e': opt::include_empty = true; break;
     case 'm': arg >> opt::min; break;
     case 't': arg >> opt::tag; break;
     }
@@ -107,7 +111,9 @@ void runSplit(int argc, char** argv) {
     std::string bx;
     r.GetTag(opt::tag, bx);
     if (bx.empty()) {
-      continue;
+      if (!opt::include_empty)
+	continue;
+      bx="bxe"; // bxtools empty
     } else {
       hit = true;
     }
