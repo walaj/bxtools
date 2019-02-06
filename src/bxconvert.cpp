@@ -18,7 +18,7 @@ static const char *CONVERT_USAGE_MESSAGE =
 "\n"
 "  General options\n"
 "  -v, --verbose         Set verbose output\n"
-"  -k, --keep-tags       Add chromosome tag (CR) and keep other tags. Default: delete all tags\n"
+"  -k, --keep-tags       Add chromosome tag (CR) and position (PS) tag, and keep other tags. Default: delete all tags\n"
 "  -t, --tag             Tag to flip for chromosome. Default: BX\n"
 "\n";
 
@@ -97,8 +97,10 @@ void runConvert(int argc, char** argv) {
 
     while (reader2.GetNextRecord(r)) {
 
-      if (opt::keeptags)
-	r.AddZTag("CR", r.ChrID() >= 0 ? hdr.IDtoName(r.ChrID()) : "*"); 
+      if (opt::keeptags) {
+	r.AddZTag("CR", r.ChrID() >= 0 ? hdr.IDtoName(r.ChrID()) : "*");
+	r.AddIntTag("POS", r.Position());
+      }
 
       read_bx(bx, r); // read the BX tag. Set default if not present
       BXLOOPCHECK(r, true, opt::tag) // read and check we have a BX
